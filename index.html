@@ -18,7 +18,7 @@ body {
 }
 
 /* Поля выбора */
-select {
+input, select {
     width: 100%;
     padding: 8px;
     border: 2px solid #0ff;
@@ -42,46 +42,58 @@ select {
 <h2>Service Cost Calculator</h2>
 
 <div class="calculator">
-    <label>Base price per photo: 500 INR</label><br><br>
-    
-    <label>Number of photos:</label>
+    <label>Total photos:</label>
     <select id="totalPhotos" onchange="calculatePrice()">
-        <option value="1">1</option>
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="15">15</option>
-        <option value="20">20</option>
-        <option value="25">25+</option>
+        <script>
+            for (let i = 1; i <= 100; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
     </select><br><br>
     
-    <label>Complex background:</label>
-    <select id="complexBackground" onchange="calculatePrice()">
-        <option value="0">No</option>
-        <option value="150">Yes (+150 INR)</option>
+    <label>Photos with complex background:</label>
+    <select id="complexBackgroundCount" onchange="calculatePrice()">
+        <script>
+            for (let i = 0; i <= 100; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
     </select><br><br>
     
-    <label>Additional model:</label>
-    <select id="additionalModel" onchange="calculatePrice()">
-        <option value="0">No</option>
-        <option value="200">Yes (+200 INR)</option>
+    <label>Photos with additional model:</label>
+    <select id="additionalModelCount" onchange="calculatePrice()">
+        <script>
+            for (let i = 0; i <= 100; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
     </select><br><br>
     
-    <label>Post-processing:</label>
-    <select id="postProcessing" onchange="calculatePrice()">
-        <option value="0">No</option>
-        <option value="100">Yes (+100 INR)</option>
+    <label>Photos with post-processing:</label>
+    <select id="postProcessingCount" onchange="calculatePrice()">
+        <script>
+            for (let i = 0; i <= 100; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
     </select><br><br>
     
-    <label>Photo styling:</label>
-    <select id="photoStyling" onchange="calculatePrice()">
-        <option value="0">No</option>
-        <option value="150">Yes (+150 INR)</option>
+    <label>Photos with photo styling:</label>
+    <select id="photoStylingCount" onchange="calculatePrice()">
+        <script>
+            for (let i = 0; i <= 100; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
     </select><br><br>
     
-    <label>Urgent delivery:</label>
-    <select id="urgentDelivery" onchange="calculatePrice()">
-        <option value="0">No</option>
-        <option value="200">Yes (+200 INR)</option>
+    <label>Photos with urgent delivery:</label>
+    <select id="urgentDeliveryCount" onchange="calculatePrice()">
+        <script>
+            for (let i = 0; i <= 100; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
     </select><br><br>
     
     <p id="result">Total cost: 500 INR</p>
@@ -91,14 +103,14 @@ select {
 function calculatePrice() {
     var basePrice = 500;
     var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
-    var complexBackground = parseInt(document.getElementById("complexBackground").value);
-    var additionalModel = parseInt(document.getElementById("additionalModel").value);
-    var postProcessing = parseInt(document.getElementById("postProcessing").value);
-    var photoStyling = parseInt(document.getElementById("photoStyling").value);
-    var urgentDelivery = parseInt(document.getElementById("urgentDelivery").value);
+    var complexBackgroundCount = parseInt(document.getElementById("complexBackgroundCount").value);
+    var additionalModelCount = parseInt(document.getElementById("additionalModelCount").value);
+    var postProcessingCount = parseInt(document.getElementById("postProcessingCount").value);
+    var photoStylingCount = parseInt(document.getElementById("photoStylingCount").value);
+    var urgentDeliveryCount = parseInt(document.getElementById("urgentDeliveryCount").value);
 
     var baseCost = basePrice * totalPhotos;
-    var extraFees = complexBackground + additionalModel + postProcessing + photoStyling + urgentDelivery;
+    var extraFees = (complexBackgroundCount * 150) + (additionalModelCount * 200) + (postProcessingCount * 100) + (photoStylingCount * 150) + (urgentDeliveryCount * 200);
     
     var discount = 0;
     if (totalPhotos >= 5 && totalPhotos <= 10) {
