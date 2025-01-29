@@ -1,3 +1,8 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Service Cost Calculator</title>
 <style>
 /* Общие стили */
 body {
@@ -38,6 +43,136 @@ input, select {
     text-shadow: 0 0 10px #ff2382, 0 0 20px #ff2382;
 }
 </style>
+
+<script>
+// Define functions in the global scope so inline onchange calls work:
+function updateDays() {
+    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
+    var minDays = Math.ceil(totalPhotos / 6);
+
+    var daysSelect = document.getElementById("days");
+    daysSelect.innerHTML = "";
+
+    // Populate valid options (from minDays up to 100)
+    for (let i = minDays; i <= 100; i++) {
+        let option = document.createElement("option");
+        option.value = i;
+        option.text = i;
+        daysSelect.appendChild(option);
+    }
+
+    // Set the dropdown to the minimum valid day count
+    daysSelect.value = minDays;
+    calculatePrice();
+}
+
+function calculatePrice() {
+    var basePrice = 500;
+    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
+    var days = parseInt(document.getElementById("days").value);
+    var complexBackgroundCount = parseInt(document.getElementById("complexBackgroundCount").value);
+    var additionalModelCount = parseInt(document.getElementById("additionalModelCount").value);
+    var postProcessingCount = parseInt(document.getElementById("postProcessingCount").value);
+    var photoStylingCount = parseInt(document.getElementById("photoStylingCount").value);
+
+    // Base cost + extra fees
+    var baseCost = basePrice * totalPhotos;
+    var extraFees = (complexBackgroundCount * 150)
+                  + (additionalModelCount * 200)
+                  + (postProcessingCount * 100)
+                  + (photoStylingCount * 150);
+
+    // Stress cost if photos exceed comfort limit
+    var L = 4;
+    var k = 0.25;
+    var n = 1.5;
+    var comfortTotal = L * days;
+    var exceed = Math.max(0, totalPhotos - comfortTotal);
+    var stressCost = basePrice * k * Math.pow(exceed, n);
+
+    // Sum without discount
+    var totalCost = baseCost + extraFees + stressCost;
+
+    // Discount logic
+    var discountRate = 0;
+    if (totalPhotos >= 5 && totalPhotos <= 10) {
+        discountRate = 0.05;  // 5%
+    } else if (totalPhotos >= 11 && totalPhotos <= 20) {
+        discountRate = 0.10;  // 10%
+    } else if (totalPhotos >= 21) {
+        discountRate = 0.15;  // 15%
+    }
+    totalCost = totalCost * (1 - discountRate);
+
+    document.getElementById("result").innerHTML = "Total cost: " + totalCost.toFixed(2) + " INR";
+}
+
+// ---------- Minimal Test Suite ----------
+function runTests() {
+    console.log("Starting Test Suite...");
+
+    // Test #1: 5 photos, day=1, all additional counts=0
+    // baseCost = 500*5 = 2500
+    // comfortTotal=4*1=4 => exceed=1 => stressCost=500*0.25*1^(1.5)=125
+    // sum=2625 => discount=5% => final=2493.75 => displayed "2493.75"
+    document.getElementById("totalPhotos").value = "5";
+    document.getElementById("days").value = "1";
+    document.getElementById("complexBackgroundCount").value = "0";
+    document.getElementById("additionalModelCount").value = "0";
+    document.getElementById("postProcessingCount").value = "0";
+    document.getElementById("photoStylingCount").value = "0";
+    calculatePrice();
+    console.log("Test #1 => " + document.getElementById("result").textContent);
+
+    // Test #2: 10 photos => discount=5%
+    // baseCost=500*10=5000
+    // Suppose days=2 => comfortTotal=8 => exceed=2 => stressCost=500*0.25*2^(1.5)=500*0.25*(2.8284)=353.55
+    // sum=5353.55 => discount=5% => ~5085.87
+    document.getElementById("totalPhotos").value = "10";
+    document.getElementById("days").value = "2";
+    document.getElementById("complexBackgroundCount").value = "0";
+    document.getElementById("additionalModelCount").value = "0";
+    document.getElementById("postProcessingCount").value = "0";
+    document.getElementById("photoStylingCount").value = "0";
+    calculatePrice();
+    console.log("Test #2 => " + document.getElementById("result").textContent);
+
+    // Test #3: 20 photos => discount=10%
+    // baseCost=10000
+    // days=3 => comfortTotal=12 => exceed=8 => stressCost=500*0.25*(8^(1.5))
+    // sum => then discount=10%
+    document.getElementById("totalPhotos").value = "20";
+    document.getElementById("days").value = "3";
+    document.getElementById("complexBackgroundCount").value = "0";
+    document.getElementById("additionalModelCount").value = "0";
+    document.getElementById("postProcessingCount").value = "0";
+    document.getElementById("photoStylingCount").value = "0";
+    calculatePrice();
+    console.log("Test #3 => " + document.getElementById("result").textContent);
+
+    // Test #4: 21 photos => discount=15%
+    // baseCost=10500
+    // days=3 => exceed=9 => stressCost=500*0.25*(9^(1.5))
+    // sum => discount=15%
+    document.getElementById("totalPhotos").value = "21";
+    document.getElementById("days").value = "3";
+    document.getElementById("complexBackgroundCount").value = "0";
+    document.getElementById("additionalModelCount").value = "0";
+    document.getElementById("postProcessingCount").value = "0";
+    document.getElementById("photoStylingCount").value = "0";
+    calculatePrice();
+    console.log("Test #4 => " + document.getElementById("result").textContent);
+}
+
+window.addEventListener("DOMContentLoaded", function() {
+    // Initialize the calculator
+    updateDays();
+    // Then run tests
+    runTests();
+});
+</script>
+</head>
+<body>
 
 <h2>Service Cost Calculator</h2>
 
@@ -95,47 +230,5 @@ input, select {
     <p id="result">Total cost: 500 INR</p>
 </div>
 
-<script>
-function updateDays() {
-    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
-    var minDays = Math.ceil(totalPhotos / 6);
-
-    var daysSelect = document.getElementById("days");
-    daysSelect.innerHTML = "";
-
-    // Populate valid options (from minDays up to 100)
-    for (let i = minDays; i <= 100; i++) {
-        let option = document.createElement("option");
-        option.value = i;
-        option.text = i;
-        daysSelect.appendChild(option);
-    }
-
-    // Set the dropdown to the minimum valid day count
-    daysSelect.value = minDays;
-    calculatePrice();
-}
-
-function calculatePrice() {
-    var basePrice = 500;
-    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
-    var days = parseInt(document.getElementById("days").value);
-    var complexBackgroundCount = parseInt(document.getElementById("complexBackgroundCount").value);
-    var additionalModelCount = parseInt(document.getElementById("additionalModelCount").value);
-    var postProcessingCount = parseInt(document.getElementById("postProcessingCount").value);
-    var photoStylingCount = parseInt(document.getElementById("photoStylingCount").value);
-
-    var baseCost = basePrice * totalPhotos;
-    var extraFees = (complexBackgroundCount * 150) + (additionalModelCount * 200) + (postProcessingCount * 100) + (photoStylingCount * 150);
-    
-    var L = 4;
-    var k = 0.25;
-    var n = 1.5;
-    var comfortTotal = L * days;
-    var exceed = Math.max(0, totalPhotos - comfortTotal);
-    var stressCost = basePrice * k * Math.pow(exceed, n);
-    
-    var totalCost = baseCost + extraFees + stressCost;
-    document.getElementById("result").innerHTML = "Total cost: " + totalCost.toFixed(2) + " INR";
-}
-</script>
+</body>
+</html>
