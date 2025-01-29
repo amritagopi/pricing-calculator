@@ -7,32 +7,14 @@ body {
     text-align: center;
 }
 
-/* Заголовок */
-h2 {
-    font-size: 2em;
-    text-transform: uppercase;
-    color: #0ff;
-    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff;
-}
-
 /* Контейнер калькулятора */
 .calculator {
-    width: 400px;
+    width: 450px;
     margin: 20px auto;
     padding: 20px;
     border-radius: 15px;
     background: rgba(0, 0, 0, 0.8);
     box-shadow: 0 0 10px #0ff, 0 0 30px #0ff;
-}
-
-/* Таблица для полей */
-table {
-    width: 100%;
-}
-
-td {
-    padding: 10px;
-    text-align: left;
 }
 
 /* Поля ввода */
@@ -67,70 +49,45 @@ button:hover {
     background: linear-gradient(90deg, #f0f, #0ff);
     box-shadow: 0 0 20px #f0f, 0 0 40px #0ff;
 }
-
-/* Итоговая сумма */
-#result {
-    font-size: 1.5em;
-    margin-top: 20px;
-    color: #0ff;
-    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
-}
 </style>
 
 <h2>Service Cost Calculator</h2>
 
 <div class="calculator">
-    <table>
-        <tr>
-            <td><label for="basePrice">Base price per photo:</label></td>
-            <td><input id="basePrice" type="number" step="0.01" value="500"></td>
-        </tr>
-        <tr>
-            <td><label for="dailyLimit">Comfortable daily capacity (photos/day):</label></td>
-            <td><input id="dailyLimit" type="number" step="1" value="4"></td>
-        </tr>
-        <tr>
-            <td><label for="numDays">Number of days:</label></td>
-            <td><input id="numDays" type="number" step="1" value="2"></td>
-        </tr>
-        <tr>
-            <td><label for="totalPhotos">Total photos (N):</label></td>
-            <td><input id="totalPhotos" type="number" step="1" value="15"></td>
-        </tr>
-        <tr>
-            <td><label for="stressCoeff">Stress fee coefficient (k, e.g. 0.25 = 25%):</label></td>
-            <td><input id="stressCoeff" type="number" step="0.01" value="0.25"></td>
-        </tr>
-        <tr>
-            <td><label for="exponent">Exponent (n):</label></td>
-            <td><input id="exponent" type="number" step="0.1" value="1.5"></td>
-        </tr>
-    </table>
-
-    <br>
+    <label>Base price per photo: <input id="basePrice" type="number" value="500"></label><br><br>
+    <label>Total photos: <input id="totalPhotos" type="number" value="15"></label><br><br>
+    <label>Complex background (+150-200 INR): <input id="complexBackground" type="number" value="0"></label><br><br>
+    <label>Additional model (+200-300 INR): <input id="additionalModel" type="number" value="0"></label><br><br>
+    <label>Post-processing (+100-150 INR): <input id="postProcessing" type="number" value="0"></label><br><br>
+    <label>Photo styling (+150-200 INR): <input id="photoStyling" type="number" value="0"></label><br><br>
+    <label>Urgent delivery (+200-300 INR): <input id="urgentDelivery" type="number" value="0"></label><br><br>
     <button onclick="calculatePrice()">Calculate</button>
     <p id="result"></p>
 </div>
 
 <script>
 function calculatePrice() {
-    var basePrice   = parseFloat(document.getElementById("basePrice").value);
-    var dailyLimit  = parseFloat(document.getElementById("dailyLimit").value);
-    var numDays     = parseFloat(document.getElementById("numDays").value);
-    var totalPhotos = parseFloat(document.getElementById("totalPhotos").value);
-    var stressCoeff = parseFloat(document.getElementById("stressCoeff").value);
-    var exponent    = parseFloat(document.getElementById("exponent").value);
+    var basePrice = parseFloat(document.getElementById("basePrice").value);
+    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
+    var complexBackground = parseFloat(document.getElementById("complexBackground").value);
+    var additionalModel = parseFloat(document.getElementById("additionalModel").value);
+    var postProcessing = parseFloat(document.getElementById("postProcessing").value);
+    var photoStyling = parseFloat(document.getElementById("photoStyling").value);
+    var urgentDelivery = parseFloat(document.getElementById("urgentDelivery").value);
 
     var baseCost = basePrice * totalPhotos;
-    var comfortTotal = dailyLimit * numDays;
-    var stressCost = 0;
+    var extraFees = complexBackground + additionalModel + postProcessing + photoStyling + urgentDelivery;
 
-    if (totalPhotos > comfortTotal) {
-        var exceed = totalPhotos - comfortTotal;
-        stressCost = basePrice * stressCoeff * Math.pow(exceed, exponent);
+    var discount = 0;
+    if (totalPhotos >= 5 && totalPhotos <= 10) {
+        discount = 0.05; // 5% discount
+    } else if (totalPhotos >= 11 && totalPhotos <= 20) {
+        discount = 0.10; // 10% discount
+    } else if (totalPhotos >= 21) {
+        discount = 0.15; // 15-20% discount
     }
 
-    var totalCost = baseCost + stressCost;
-    document.getElementById("result").innerHTML = "Total cost: " + totalCost.toFixed(2);
+    var totalCost = (baseCost + extraFees) * (1 - discount);
+    document.getElementById("result").innerHTML = "Total cost: " + totalCost.toFixed(2) + " INR";
 }
 </script>
