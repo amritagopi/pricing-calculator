@@ -52,7 +52,7 @@ input, select {
     </select><br><br>
     
     <label>Number of days for completion:</label>
-    <select id="days" onchange="calculatePrice()">
+    <select id="days" onchange="validateDays(); calculatePrice()">
         <script>
             for (let i = 1; i <= 100; i++) {
                 document.write(`<option value="${i}">${i}</option>`);
@@ -102,9 +102,18 @@ input, select {
 <script>
 function updateDays() {
     var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
-    var days = Math.ceil(totalPhotos / 6); // Рассчитываем минимальное количество дней
-    document.getElementById("days").value = days;
+    var minDays = Math.ceil(totalPhotos / 6); // Рассчитываем минимальное количество дней
+    document.getElementById("days").value = minDays;
     calculatePrice();
+}
+
+function validateDays() {
+    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
+    var days = parseInt(document.getElementById("days").value);
+    var minDays = Math.ceil(totalPhotos / 6);
+    if (days < minDays) {
+        document.getElementById("days").value = minDays;
+    }
 }
 
 function calculatePrice() {
