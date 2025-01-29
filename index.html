@@ -52,12 +52,8 @@ input, select {
     </select><br><br>
     
     <label>Number of days for completion:</label>
-    <select id="days" onchange="validateDays(); calculatePrice()">
-        <script>
-            for (let i = 1; i <= 100; i++) {
-                document.write(`<option value="${i}">${i}</option>`);
-            }
-        </script>
+    <select id="days" onchange="calculatePrice()">
+        <!-- The options will be dynamically populated based on total photos -->
     </select><br><br>
     
     <label>Photos with complex background:</label>
@@ -102,18 +98,22 @@ input, select {
 <script>
 function updateDays() {
     var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
-    var minDays = Math.ceil(totalPhotos / 6); // Рассчитываем минимальное количество дней
-    document.getElementById("days").value = minDays;
-    calculatePrice();
-}
-
-function validateDays() {
-    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
-    var days = parseInt(document.getElementById("days").value);
     var minDays = Math.ceil(totalPhotos / 6);
-    if (days < minDays) {
-        document.getElementById("days").value = minDays;
+
+    var daysSelect = document.getElementById("days");
+    daysSelect.innerHTML = "";
+
+    // Populate valid options (from minDays up to 100)
+    for (let i = minDays; i <= 100; i++) {
+        let option = document.createElement("option");
+        option.value = i;
+        option.text = i;
+        daysSelect.appendChild(option);
     }
+
+    // Set the dropdown to the minimum valid day count
+    daysSelect.value = minDays;
+    calculatePrice();
 }
 
 function calculatePrice() {
