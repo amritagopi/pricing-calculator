@@ -51,6 +51,15 @@ input, select {
         </script>
     </select><br><br>
     
+    <label>Number of days for completion:</label>
+    <select id="days" onchange="calculatePrice()">
+        <script>
+            for (let i = 1; i <= 100; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
+    </select><br><br>
+    
     <label>Photos with complex background:</label>
     <select id="complexBackgroundCount" onchange="calculatePrice()">
         <script>
@@ -87,15 +96,6 @@ input, select {
         </script>
     </select><br><br>
     
-    <label>Photos with urgent delivery:</label>
-    <select id="urgentDeliveryCount" onchange="calculatePrice()">
-        <script>
-            for (let i = 0; i <= 100; i++) {
-                document.write(`<option value="${i}">${i}</option>`);
-            }
-        </script>
-    </select><br><br>
-    
     <p id="result">Total cost: 500 INR</p>
 </div>
 
@@ -103,25 +103,23 @@ input, select {
 function calculatePrice() {
     var basePrice = 500;
     var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
+    var days = parseInt(document.getElementById("days").value);
     var complexBackgroundCount = parseInt(document.getElementById("complexBackgroundCount").value);
     var additionalModelCount = parseInt(document.getElementById("additionalModelCount").value);
     var postProcessingCount = parseInt(document.getElementById("postProcessingCount").value);
     var photoStylingCount = parseInt(document.getElementById("photoStylingCount").value);
-    var urgentDeliveryCount = parseInt(document.getElementById("urgentDeliveryCount").value);
 
     var baseCost = basePrice * totalPhotos;
-    var extraFees = (complexBackgroundCount * 150) + (additionalModelCount * 200) + (postProcessingCount * 100) + (photoStylingCount * 150) + (urgentDeliveryCount * 200);
+    var extraFees = (complexBackgroundCount * 150) + (additionalModelCount * 200) + (postProcessingCount * 100) + (photoStylingCount * 150);
     
-    var discount = 0;
-    if (totalPhotos >= 5 && totalPhotos <= 10) {
-        discount = 0.05;
-    } else if (totalPhotos >= 11 && totalPhotos <= 20) {
-        discount = 0.10;
-    } else if (totalPhotos >= 21) {
-        discount = 0.15;
-    }
-
-    var totalCost = (baseCost + extraFees) * (1 - discount);
+    var L = 4;
+    var k = 0.25;
+    var n = 1.5;
+    var comfortTotal = L * days;
+    var exceed = Math.max(0, totalPhotos - comfortTotal);
+    var stressCost = basePrice * k * Math.pow(exceed, n);
+    
+    var totalCost = baseCost + extraFees + stressCost;
     document.getElementById("result").innerHTML = "Total cost: " + totalCost.toFixed(2) + " INR";
 }
 </script>
