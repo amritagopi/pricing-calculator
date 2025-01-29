@@ -43,7 +43,7 @@ input, select {
 
 <div class="calculator">
     <label>Total photos:</label>
-    <select id="totalPhotos" onchange="calculatePrice()">
+    <select id="totalPhotos" onchange="updateDays(); calculatePrice()">
         <script>
             for (let i = 1; i <= 100; i++) {
                 document.write(`<option value="${i}">${i}</option>`);
@@ -100,6 +100,13 @@ input, select {
 </div>
 
 <script>
+function updateDays() {
+    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
+    var days = Math.ceil(totalPhotos / 6); // Рассчитываем минимальное количество дней
+    document.getElementById("days").value = days;
+    calculatePrice();
+}
+
 function calculatePrice() {
     var basePrice = 500;
     var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
