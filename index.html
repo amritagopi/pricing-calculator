@@ -5,12 +5,18 @@ body {
     color: white;
     font-family: 'Arial', sans-serif;
     text-align: center;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 /* Контейнер калькулятора */
 .calculator {
-    width: 450px;
-    margin: 20px auto;
+    width: 90%;
+    max-width: 600px;
     padding: 20px;
     border-radius: 15px;
     background: rgba(0, 0, 0, 0.8);
@@ -20,22 +26,23 @@ body {
 /* Поля выбора */
 input, select {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border: 2px solid #0ff;
     background: black;
     color: #0ff;
-    font-size: 1em;
+    font-size: 1.2em;
     text-align: center;
     border-radius: 5px;
     box-shadow: 0 0 5px #0ff;
+    margin-bottom: 10px;
 }
 
 /* Итоговая сумма */
 #result {
-    font-size: 1.5em;
+    font-size: 1.8em;
     margin-top: 20px;
-    color: #ff2382;
-    text-shadow: 0 0 10px #ff2382, 0 0 20px #ff2382;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
 </style>
 
