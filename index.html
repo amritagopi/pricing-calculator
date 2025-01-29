@@ -67,45 +67,7 @@ input, select {
     </select><br><br>
     
     <label>Number of days for completion:</label>
-    <select id="days" onchange="calculatePrice()">
-        <!-- The options will be dynamically populated based on total photos -->
-    </select><br><br>
-    
-    <label>Photos with complex background:</label>
-    <select id="complexBackgroundCount" onchange="calculatePrice()">
-        <script>
-            for (let i = 0; i <= 100; i++) {
-                document.write(`<option value="${i}">${i}</option>`);
-            }
-        </script>
-    </select><br><br>
-    
-    <label>Photos with additional model:</label>
-    <select id="additionalModelCount" onchange="calculatePrice()">
-        <script>
-            for (let i = 0; i <= 100; i++) {
-                document.write(`<option value="${i}">${i}</option>`);
-            }
-        </script>
-    </select><br><br>
-    
-    <label>Photos with post-processing:</label>
-    <select id="postProcessingCount" onchange="calculatePrice()">
-        <script>
-            for (let i = 0; i <= 100; i++) {
-                document.write(`<option value="${i}">${i}</option>`);
-            }
-        </script>
-    </select><br><br>
-    
-    <label>Photos with photo styling:</label>
-    <select id="photoStylingCount" onchange="calculatePrice()">
-        <script>
-            for (let i = 0; i <= 100; i++) {
-                document.write(`<option value="${i}">${i}</option>`);
-            }
-        </script>
-    </select><br><br>
+    <select id="days" onchange="calculatePrice()"></select><br><br>
     
     <p id="result">Total cost: 500 INR</p>
 </div>
@@ -117,8 +79,7 @@ function updateDays() {
 
     var daysSelect = document.getElementById("days");
     daysSelect.innerHTML = "";
-
-    // Populate valid options (from minDays up to 100)
+    
     for (let i = minDays; i <= 100; i++) {
         let option = document.createElement("option");
         option.value = i;
@@ -126,7 +87,6 @@ function updateDays() {
         daysSelect.appendChild(option);
     }
 
-    // Set the dropdown to the minimum valid day count
     daysSelect.value = minDays;
     calculatePrice();
 }
@@ -135,22 +95,19 @@ function calculatePrice() {
     var basePrice = 500;
     var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
     var days = parseInt(document.getElementById("days").value);
-    var complexBackgroundCount = parseInt(document.getElementById("complexBackgroundCount").value);
-    var additionalModelCount = parseInt(document.getElementById("additionalModelCount").value);
-    var postProcessingCount = parseInt(document.getElementById("postProcessingCount").value);
-    var photoStylingCount = parseInt(document.getElementById("photoStylingCount").value);
 
     var baseCost = basePrice * totalPhotos;
-    var extraFees = (complexBackgroundCount * 150) + (additionalModelCount * 200) + (postProcessingCount * 100) + (photoStylingCount * 150);
-    
-    var L = 4;
-    var k = 0.25;
-    var n = 1.5;
-    var comfortTotal = L * days;
-    var exceed = Math.max(0, totalPhotos - comfortTotal);
-    var stressCost = basePrice * k * Math.pow(exceed, n);
-    
-    var totalCost = baseCost + extraFees + stressCost;
+    var discount = 0;
+
+    if (totalPhotos >= 5 && totalPhotos <= 10) {
+        discount = 0.05;
+    } else if (totalPhotos >= 11 && totalPhotos <= 20) {
+        discount = 0.10;
+    } else if (totalPhotos >= 21) {
+        discount = 0.15;
+    }
+
+    var totalCost = baseCost * (1 - discount);
     document.getElementById("result").innerHTML = "Total cost: " + totalCost.toFixed(2) + " INR";
 }
 </script>
