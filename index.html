@@ -1,5 +1,63 @@
-    </select><br><br>
+<style>
+/* Общие стили */
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
+/* Контейнер калькулятора */
+.calculator {
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 10px #0ff, 0 0 30px #0ff;
+}
+
+/* Поля выбора */
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #0ff;
+    background: black;
+    color: #0ff;
+    font-size: 1.2em;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #0ff;
+    margin-bottom: 10px;
+}
+
+/* Итоговая сумма */
+#result {
+    font-size: 1.8em;
+    margin-top: 20px;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+}
+</style>
+
+<h2>Service Cost Calculator</h2>
+
+<div class="calculator">
+    <label>Total photos:</label>
+    <select id="totalPhotos" onchange="updateDays(); calculatePrice()">
+        <script>
+            for (let i = 1; i <= 100; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
+    </select><br><br>
+    
     <label>Number of days for completion:</label>
     <select id="days" onchange="calculatePrice()">
         <!-- The options will be dynamically populated based on total photos -->
@@ -40,16 +98,19 @@
             }
         </script>
     </select><br><br>
-    <select id="days" onchange="calculatePrice()"></select><br><br>
-
+    
     <p id="result">Total cost: 500 INR</p>
 </div>
-@@ -117,16 +79,14 @@ <h2>Service Cost Calculator</h2>
+
+<script>
+function updateDays() {
+    var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
+    var minDays = Math.ceil(totalPhotos / 6);
 
     var daysSelect = document.getElementById("days");
     daysSelect.innerHTML = "";
+
     // Populate valid options (from minDays up to 100)
-    
     for (let i = minDays; i <= 100; i++) {
         let option = document.createElement("option");
         option.value = i;
@@ -61,7 +122,8 @@
     daysSelect.value = minDays;
     calculatePrice();
 }
-@@ -135,22 +95,19 @@ <h2>Service Cost Calculator</h2>
+
+function calculatePrice() {
     var basePrice = 500;
     var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
     var days = parseInt(document.getElementById("days").value);
@@ -81,15 +143,6 @@
     var stressCost = basePrice * k * Math.pow(exceed, n);
     
     var totalCost = baseCost + extraFees + stressCost;
-    var discount = 0;
-    if (totalPhotos >= 5 && totalPhotos <= 10) {
-        discount = 0.05;
-    } else if (totalPhotos >= 11 && totalPhotos <= 20) {
-        discount = 0.10;
-    } else if (totalPhotos >= 21) {
-        discount = 0.15;
-    }
-    var totalCost = baseCost * (1 - discount);
     document.getElementById("result").innerHTML = "Total cost: " + totalCost.toFixed(2) + " INR";
 }
 </script>
