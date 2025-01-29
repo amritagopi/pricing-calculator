@@ -17,8 +17,8 @@ body {
     box-shadow: 0 0 10px #0ff, 0 0 30px #0ff;
 }
 
-/* Поля ввода */
-input {
+/* Поля выбора */
+select {
     width: 100%;
     padding: 8px;
     border: 2px solid #0ff;
@@ -30,61 +30,83 @@ input {
     box-shadow: 0 0 5px #0ff;
 }
 
-/* Кнопка */
-button {
-    background: linear-gradient(90deg, #0ff, #f0f);
-    border: none;
-    padding: 10px 20px;
-    font-size: 1.2em;
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-    text-transform: uppercase;
-    box-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
-    transition: 0.3s ease-in-out;
-}
-
-button:hover {
-    background: linear-gradient(90deg, #f0f, #0ff);
-    box-shadow: 0 0 20px #f0f, 0 0 40px #0ff;
+/* Итоговая сумма */
+#result {
+    font-size: 1.5em;
+    margin-top: 20px;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
 }
 </style>
 
 <h2>Service Cost Calculator</h2>
 
 <div class="calculator">
-    <label>Base price per photo: <input id="basePrice" type="number" value="500"></label><br><br>
-    <label>Total photos: <input id="totalPhotos" type="number" value="15"></label><br><br>
-    <label>Complex background (+150-200 INR): <input id="complexBackground" type="number" value="0"></label><br><br>
-    <label>Additional model (+200-300 INR): <input id="additionalModel" type="number" value="0"></label><br><br>
-    <label>Post-processing (+100-150 INR): <input id="postProcessing" type="number" value="0"></label><br><br>
-    <label>Photo styling (+150-200 INR): <input id="photoStyling" type="number" value="0"></label><br><br>
-    <label>Urgent delivery (+200-300 INR): <input id="urgentDelivery" type="number" value="0"></label><br><br>
-    <button onclick="calculatePrice()">Calculate</button>
-    <p id="result"></p>
+    <label>Base price per photo: 500 INR</label><br><br>
+    
+    <label>Number of photos:</label>
+    <select id="totalPhotos" onchange="calculatePrice()">
+        <option value="1">1</option>
+        <option value="5">5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+        <option value="25">25+</option>
+    </select><br><br>
+    
+    <label>Complex background:</label>
+    <select id="complexBackground" onchange="calculatePrice()">
+        <option value="0">No</option>
+        <option value="150">Yes (+150 INR)</option>
+    </select><br><br>
+    
+    <label>Additional model:</label>
+    <select id="additionalModel" onchange="calculatePrice()">
+        <option value="0">No</option>
+        <option value="200">Yes (+200 INR)</option>
+    </select><br><br>
+    
+    <label>Post-processing:</label>
+    <select id="postProcessing" onchange="calculatePrice()">
+        <option value="0">No</option>
+        <option value="100">Yes (+100 INR)</option>
+    </select><br><br>
+    
+    <label>Photo styling:</label>
+    <select id="photoStyling" onchange="calculatePrice()">
+        <option value="0">No</option>
+        <option value="150">Yes (+150 INR)</option>
+    </select><br><br>
+    
+    <label>Urgent delivery:</label>
+    <select id="urgentDelivery" onchange="calculatePrice()">
+        <option value="0">No</option>
+        <option value="200">Yes (+200 INR)</option>
+    </select><br><br>
+    
+    <p id="result">Total cost: 500 INR</p>
 </div>
 
 <script>
 function calculatePrice() {
-    var basePrice = parseFloat(document.getElementById("basePrice").value);
+    var basePrice = 500;
     var totalPhotos = parseInt(document.getElementById("totalPhotos").value);
-    var complexBackground = parseFloat(document.getElementById("complexBackground").value);
-    var additionalModel = parseFloat(document.getElementById("additionalModel").value);
-    var postProcessing = parseFloat(document.getElementById("postProcessing").value);
-    var photoStyling = parseFloat(document.getElementById("photoStyling").value);
-    var urgentDelivery = parseFloat(document.getElementById("urgentDelivery").value);
+    var complexBackground = parseInt(document.getElementById("complexBackground").value);
+    var additionalModel = parseInt(document.getElementById("additionalModel").value);
+    var postProcessing = parseInt(document.getElementById("postProcessing").value);
+    var photoStyling = parseInt(document.getElementById("photoStyling").value);
+    var urgentDelivery = parseInt(document.getElementById("urgentDelivery").value);
 
     var baseCost = basePrice * totalPhotos;
     var extraFees = complexBackground + additionalModel + postProcessing + photoStyling + urgentDelivery;
-
+    
     var discount = 0;
     if (totalPhotos >= 5 && totalPhotos <= 10) {
-        discount = 0.05; // 5% discount
+        discount = 0.05;
     } else if (totalPhotos >= 11 && totalPhotos <= 20) {
-        discount = 0.10; // 10% discount
+        discount = 0.10;
     } else if (totalPhotos >= 21) {
-        discount = 0.15; // 15-20% discount
+        discount = 0.15;
     }
 
     var totalCost = (baseCost + extraFees) * (1 - discount);
