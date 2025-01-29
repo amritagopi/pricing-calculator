@@ -1,0 +1,136 @@
+<style>
+/* Общие стили */
+body {
+    background-color: black;
+    color: white;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+}
+
+/* Заголовок */
+h2 {
+    font-size: 2em;
+    text-transform: uppercase;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff;
+}
+
+/* Контейнер калькулятора */
+.calculator {
+    width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 10px #0ff, 0 0 30px #0ff;
+}
+
+/* Таблица для полей */
+table {
+    width: 100%;
+}
+
+td {
+    padding: 10px;
+    text-align: left;
+}
+
+/* Поля ввода */
+input {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #0ff;
+    background: black;
+    color: #0ff;
+    font-size: 1em;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #0ff;
+}
+
+/* Кнопка */
+button {
+    background: linear-gradient(90deg, #0ff, #f0f);
+    border: none;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px #0ff, 0 0 20px #f0f;
+    transition: 0.3s ease-in-out;
+}
+
+button:hover {
+    background: linear-gradient(90deg, #f0f, #0ff);
+    box-shadow: 0 0 20px #f0f, 0 0 40px #0ff;
+}
+
+/* Итоговая сумма */
+#result {
+    font-size: 1.5em;
+    margin-top: 20px;
+    color: #0ff;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+}
+</style>
+
+<h2>Service Cost Calculator</h2>
+
+<div class="calculator">
+    <table>
+        <tr>
+            <td><label for="basePrice">Base price per photo:</label></td>
+            <td><input id="basePrice" type="number" step="0.01" value="500"></td>
+        </tr>
+        <tr>
+            <td><label for="dailyLimit">Comfortable daily capacity (photos/day):</label></td>
+            <td><input id="dailyLimit" type="number" step="1" value="4"></td>
+        </tr>
+        <tr>
+            <td><label for="numDays">Number of days:</label></td>
+            <td><input id="numDays" type="number" step="1" value="2"></td>
+        </tr>
+        <tr>
+            <td><label for="totalPhotos">Total photos (N):</label></td>
+            <td><input id="totalPhotos" type="number" step="1" value="15"></td>
+        </tr>
+        <tr>
+            <td><label for="stressCoeff">Stress fee coefficient (k, e.g. 0.25 = 25%):</label></td>
+            <td><input id="stressCoeff" type="number" step="0.01" value="0.25"></td>
+        </tr>
+        <tr>
+            <td><label for="exponent">Exponent (n):</label></td>
+            <td><input id="exponent" type="number" step="0.1" value="1.5"></td>
+        </tr>
+    </table>
+
+    <br>
+    <button onclick="calculatePrice()">Calculate</button>
+    <p id="result"></p>
+</div>
+
+<script>
+function calculatePrice() {
+    var basePrice   = parseFloat(document.getElementById("basePrice").value);
+    var dailyLimit  = parseFloat(document.getElementById("dailyLimit").value);
+    var numDays     = parseFloat(document.getElementById("numDays").value);
+    var totalPhotos = parseFloat(document.getElementById("totalPhotos").value);
+    var stressCoeff = parseFloat(document.getElementById("stressCoeff").value);
+    var exponent    = parseFloat(document.getElementById("exponent").value);
+
+    var baseCost = basePrice * totalPhotos;
+    var comfortTotal = dailyLimit * numDays;
+    var stressCost = 0;
+
+    if (totalPhotos > comfortTotal) {
+        var exceed = totalPhotos - comfortTotal;
+        stressCost = basePrice * stressCoeff * Math.pow(exceed, exponent);
+    }
+
+    var totalCost = baseCost + stressCost;
+    document.getElementById("result").innerHTML = "Total cost: " + totalCost.toFixed(2);
+}
+</script>
