@@ -46,8 +46,20 @@ input, select {
 /* Заметка под калькулятором */
 .note {
     margin-top: 20px;
-    font-size: 1em;
-    color: #0ff;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Неоновый градиент для текста */
+.neon-gradient-text {
+    background: linear-gradient(90deg, #ff00ff, #9400D3, #0000ff);
+    -webkit-background-clip: text;
+    color: transparent;
+    text-shadow:
+       0 0 5px rgba(255,0,255,0.7),
+       0 0 10px rgba(148,0,211,0.6),
+       0 0 15px rgba(0,0,255,0.5);
 }
 </style>
 
@@ -225,8 +237,10 @@ window.addEventListener("DOMContentLoaded", function() {
     <p id="result">Total cost: 500 INR</p>
 </div>
 
-<!-- Заметка о важности срока выполнения -->
-<p class="note">Pay attention that the total cost depends on the selected period of execution of the order.</p>
+<!-- Заметка о важности срока выполнения в неоновом градиенте -->
+<p class="note neon-gradient-text">
+  Important: the current cost depends on the selected deadlines for the execution of the order!
+</p>
 
 </body>
 </html>
