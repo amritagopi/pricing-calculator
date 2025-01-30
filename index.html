@@ -42,6 +42,13 @@ input, select {
     color: #ff2382;
     text-shadow: 0 0 10px #ff2382, 0 0 20px #ff2382;
 }
+
+/* Заметка под калькулятором */
+.note {
+    margin-top: 20px;
+    font-size: 1em;
+    color: #0ff;
+}
 </style>
 
 <script>
@@ -111,10 +118,7 @@ function calculatePrice() {
 function runTests() {
     console.log("Starting Test Suite...");
 
-    // Test #1: 5 photos, day=1, all additional counts=0
-    // baseCost = 500*5 = 2500
-    // comfortTotal=4*1=4 => exceed=1 => stressCost=500*0.25*1^(1.5)=125
-    // sum=2625 => discount=5% => final=2493.75 => displayed "2493.75"
+    // Test #1: 5 photos, day=1 => discount=5%
     document.getElementById("totalPhotos").value = "5";
     document.getElementById("days").value = "1";
     document.getElementById("complexBackgroundCount").value = "0";
@@ -125,9 +129,6 @@ function runTests() {
     console.log("Test #1 => " + document.getElementById("result").textContent);
 
     // Test #2: 10 photos => discount=5%
-    // baseCost=500*10=5000
-    // Suppose days=2 => comfortTotal=8 => exceed=2 => stressCost=500*0.25*2^(1.5)=500*0.25*(2.8284)=353.55
-    // sum=5353.55 => discount=5% => ~5085.87
     document.getElementById("totalPhotos").value = "10";
     document.getElementById("days").value = "2";
     document.getElementById("complexBackgroundCount").value = "0";
@@ -138,9 +139,6 @@ function runTests() {
     console.log("Test #2 => " + document.getElementById("result").textContent);
 
     // Test #3: 20 photos => discount=10%
-    // baseCost=10000
-    // days=3 => comfortTotal=12 => exceed=8 => stressCost=500*0.25*(8^(1.5))
-    // sum => then discount=10%
     document.getElementById("totalPhotos").value = "20";
     document.getElementById("days").value = "3";
     document.getElementById("complexBackgroundCount").value = "0";
@@ -151,9 +149,6 @@ function runTests() {
     console.log("Test #3 => " + document.getElementById("result").textContent);
 
     // Test #4: 21 photos => discount=15%
-    // baseCost=10500
-    // days=3 => exceed=9 => stressCost=500*0.25*(9^(1.5))
-    // sum => discount=15%
     document.getElementById("totalPhotos").value = "21";
     document.getElementById("days").value = "3";
     document.getElementById("complexBackgroundCount").value = "0";
@@ -229,6 +224,9 @@ window.addEventListener("DOMContentLoaded", function() {
     
     <p id="result">Total cost: 500 INR</p>
 </div>
+
+<!-- Заметка о важности срока выполнения -->
+<p class="note">Pay attention that the total cost depends on the selected period of execution of the order.</p>
 
 </body>
 </html>
